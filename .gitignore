@@ -1,0 +1,15 @@
+# Dependency folders (regenerated from lock files - see package-lock.json)
+node_modules/
+__pycache__/
+*.pyc
+
+# Environment/secrets files
+.env
+.env.local
+
+# Docker
+*.log
+
+# OS/editor junk
+.DS_Store
+.vscode/
