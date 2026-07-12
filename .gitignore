@@ -13,3 +13,18 @@ __pycache__/
 # OS/editor junk
 .DS_Store
 .vscode/
+# Terraform local state and cache - NEVER commit these
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+crash.log
+crash.*.log
+
+# Terraform variable files that may contain secrets
+*.tfvars
+*.tfvars.json
+!example.tfvars
+
+# Terraform plan output files
+*.tfplan
