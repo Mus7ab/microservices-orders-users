@@ -1,0 +1,12 @@
+services:
+  orders:
+    build: ./services/orders
+    ports:
+      - "3000:3000"
+    container_name: orders-service
+
+  users:
+    build: ./services/users
+    ports:
+      - "3001:3000"
+    container_name: users-service
