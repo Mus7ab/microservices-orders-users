@@ -6,7 +6,7 @@ app.get('/orders', (req, res) => {
   res.json({
     service: 'orders',
     hostname: require('os').hostname(),
-    message: 'Orders service is running'
+    message: 'Orders service is running (v2 - CI/CD test)'
   });
 });
 
