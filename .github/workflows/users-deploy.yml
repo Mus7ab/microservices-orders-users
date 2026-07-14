@@ -1,0 +1,41 @@
+name: Users Service CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "services/users/**"
+      - "terraform/ecs-task-definitions.tf"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-2
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push users image
+        working-directory: services/users
+        run: |
+          docker build -t ${{ steps.ecr-login.outputs.registry }}/users-service:${{ github.sha }} .
+          docker push ${{ steps.ecr-login.outputs.registry }}/users-service:${{ github.sha }}
+
+      - name: Force new ECS deployment
+        run: |
+          aws ecs update-service \
+            --cluster microservices-cluster \
+            --service microservices-users-service \
+            --force-new-deployment \
+            --region ap-south-2
