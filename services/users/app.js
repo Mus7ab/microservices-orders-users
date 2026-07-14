@@ -6,7 +6,7 @@ app.get('/users', (req, res) => {
   res.json({
     service: 'users',
     hostname: require('os').hostname(),
-    message: 'Users service is running'
+    message: 'Users service is running (v2 - CI/CD verified)'
   });
 });
 
