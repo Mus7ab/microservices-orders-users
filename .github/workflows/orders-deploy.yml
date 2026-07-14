@@ -31,10 +31,26 @@ jobs:
           docker build -t ${{ steps.ecr-login.outputs.registry }}/orders-service:${{ github.sha }} .
           docker push ${{ steps.ecr-login.outputs.registry }}/orders-service:${{ github.sha }}
 
-      - name: Force new ECS deployment
+      - name: Download current task definition
         run: |
-          aws ecs update-service \
-            --cluster microservices-cluster \
-            --service microservices-orders-service \
-            --force-new-deployment \
-            --region ap-south-2
+          aws ecs describe-task-definition \
+            --task-definition microservices-orders \
+            --region ap-south-2 \
+            --query 'taskDefinition' \
+            --output json > task-def.json
+
+      - name: Update image in task definition
+        id: update-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-def.json
+          container-name: orders
+          image: ${{ steps.ecr-login.outputs.registry }}/orders-service:${{ github.sha }}
+
+      - name: Deploy updated task definition to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.update-task-def.outputs.task-definition }}
+          service: microservices-orders-service
+          cluster: microservices-cluster
+          wait-for-service-stability: true
