@@ -11,32 +11,32 @@ An e-commerce-style backend needs to scale its `orders` and `users` functionalit
 ![Architecture Diagram](architecture/diagram.png)
 
 ```
-                         Internet
-                            │
-                            ▼
-                  ┌──────────────────┐
-                  │   ALB (public)   │◄── SG: 80 from 0.0.0.0/0
-                  └────────┬─────────┘
-                            │
-              ┌─────────────┴─────────────┐
-              ▼                           ▼
-      /orders/* rule                /users/* rule
-              │                           │
-              ▼                           ▼
-    ┌──────────────────┐        ┌──────────────────┐
-    │  orders-tg (IP)   │        │  users-tg (IP)   │
-    └─────────┬─────────┘        └─────────┬─────────┘
-              │                           │
-              ▼                           ▼
-   ┌───────────────────┐       ┌───────────────────┐
-   │ ECS Service:orders │       │ ECS Service:users  │
-   │ desired_count = 2  │       │ desired_count = 2  │
-   └─────────┬──────────┘       └─────────┬──────────┘
-              │                           │
-              ▼                           ▼
-   Fargate Tasks (AZ-a, AZ-b)  Fargate Tasks (AZ-a, AZ-b)
-   public subnets, own ENI     public subnets, own ENI
-   SG: 3000 from ALB-SG only   SG: 3000 from ALB-SG only
+                                   Internet
+                                      │
+                                      ▼
+                            ┌──────────────────┐
+                            │   ALB (public)   │◄── SG: 80 from 0.0.0.0/0
+                            └────────┬─────────┘
+                                     │
+                       ┌─────────────┴─────────────┐
+                       ▼                           ▼
+                  /orders/* rule                /users/* rule
+                       │                           │
+                       ▼                           ▼
+              ┌───────────────────┐        ┌───────────────────┐
+              │  orders-tg (IP)   │        │  users-tg (IP)    │
+              └─────────┬─────────┘        └─────────┬─────────┘
+                        │                            │
+                        ▼                            ▼
+              ┌───────────────────┐        ┌───────────────────┐
+              │ ECS Service:orders│        │ ECS Service:users │
+              │ desired_count = 2 │        │ desired_count = 2 │
+              └─────────┬─────────┘        └─────────┬─────────┘
+                        │                            │
+                        ▼                            ▼
+            Fargate Tasks (AZ-a, AZ-b)  Fargate Tasks (AZ-a, AZ-b)
+             public subnets, own ENI     public subnets, own ENI
+            SG: 3000 from ALB-SG only   SG: 3000 from ALB-SG only
 ```
 
 Unmatched paths (anything other than `/orders*` or `/users*`) receive a `404` directly from the ALB listener's default action.
