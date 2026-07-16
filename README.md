@@ -14,6 +14,8 @@ This project simulates that split by decomposing a monolithic backend into two i
 
 # Architecture
 
+![Architecture Diagram](architecture/diagram.png)
+
 ## Architecture Diagram
 
 ```
