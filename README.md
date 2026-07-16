@@ -292,6 +292,8 @@ Actual AWS cost incurred during development (approximately 16 days):
 This was covered using available AWS promotional Free Plan credits.
 
 Unlike EC2, **AWS Fargate does not include a Free Tier allowance**, meaning compute charges begin immediately.
+318
+
 
 Approximate monthly on-demand costs if left running:
 
@@ -315,7 +317,7 @@ terraform destroy
 
 Terraform removes all managed infrastructure.
 
-Amazon ECR repositories and their images are intentionally managed separately and should be deleted manually if no longer required.
+Amazon ECR repositories and their images are intentionally managed separately from Terraform state. For this project, both repositories (`orders-service`, `users-service`) were deleted manually as the final teardown step, via `aws ecr delete-repository --force`.
 
 ---
 
