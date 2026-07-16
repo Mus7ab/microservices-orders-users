@@ -90,8 +90,10 @@ project-2-microservices/
 │   ├── alb.tf
 │   ├── ecs-cluster.tf
 │   ├── ecs-iam.tf
+│   ├── ecs-logs.tf
 │   ├── ecs-task-definitions.tf
-│   └── ecs-services.tf
+│   ├── ecs-services.tf
+│   └── outputs.tf
 │
 └── .github/
     └── workflows/
